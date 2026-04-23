@@ -1,0 +1,346 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { 
+  ShieldCheck, 
+  Smartphone, 
+  Zap, 
+  Heart, 
+  Menu, 
+  X, 
+  ArrowRight,
+  Maximize2,
+  Loader2,
+  Image as ImageIcon
+} from 'lucide-react';
+
+// API Key setup
+const apiKey = "";
+
+/**
+ * Image Generation Component using Imagen 4.0
+ */
+const GeneratedImage = ({ prompt, className, alt }) => {
+  const [imageUrl, setImageUrl] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const generateImage = useCallback(async () => {
+    setLoading(true);
+    setError(false);
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            instances: [{ prompt: prompt }],
+            parameters: { sampleCount: 1 }
+          }),
+        }
+      );
+
+      if (!response.ok) throw new Error('Generation failed');
+      const result = await response.json();
+      const base64Data = result.predictions[0].bytesBase64Encoded;
+      setImageUrl(`data:image/png;base64,${base64Data}`);
+    } catch (err) {
+      console.error(err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }, [prompt]);
+
+  useEffect(() => {
+    generateImage();
+  }, [generateImage]);
+
+  if (loading) {
+    return (
+      <div className={`${className} bg-zinc-800 flex flex-col items-center justify-center gap-4 text-zinc-500`}>
+        <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+        <span className="text-[10px] uppercase tracking-widest animate-pulse">Generating High-Res Image...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={`${className} bg-zinc-900 flex items-center justify-center text-zinc-600`}>
+        <span className="text-xs">Failed to load image.</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className={className}>
+      <img src={imageUrl} alt={alt} className="w-full h-full object-cover" />
+    </div>
+  );
+};
+
+const App = () => {
+  const [viewMode, setViewMode] = useState('luxury');
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const content = {
+    luxury: {
+      heroTitle: "移動する邸宅。",
+      heroSub: "土地の制約から解き放たれる、究極の自由。渡辺製作所のクラフトマンシップが、あなたの理想を「可動」にする。",
+      accentColor: "border-amber-500 text-amber-500",
+      bgGradient: "from-zinc-900 to-black",
+      cta: "理想をデザインする",
+      tagline: "FOR PRIVATE LUXURY",
+      imagePrompt: "A ultra-modern high-end luxury trailer house with large glass windows and a wide wooden deck, located in a scenic Japanese mountain forest during autumn sunset, high-end architectural photography, 8k resolution, photorealistic."
+    },
+    public: {
+      heroTitle: "有事を日常が支える。",
+      heroSub: "迅速な展開、完全な自律。オフグリッド技術が、災害時の医療・居住インフラを再定義する。フェーズフリーな未来を、今。",
+      accentColor: "border-blue-500 text-blue-500",
+      bgGradient: "from-slate-900 to-zinc-900",
+      cta: "防災計画の相談",
+      tagline: "FOR PUBLIC SAFETY",
+      imagePrompt: "A high-tech mobile clinic trailer house with solar panels on the roof, white and blue professional exterior with red cross symbol, disaster relief setting, professional and sturdy appearance, 8k resolution, realistic photography."
+    }
+  };
+
+  const current = content[viewMode];
+
+  return (
+    <div className={`min-h-screen font-sans antialiased text-slate-100 selection:bg-amber-200 selection:text-black overflow-x-hidden ${current.bgGradient}`}>
+      
+      {/* Navigation */}
+      <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-black/80 backdrop-blur-lg py-4' : 'bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-white flex items-center justify-center rounded-sm">
+              <span className="text-black font-black text-xl">W</span>
+            </div>
+            <span className="text-xl font-bold tracking-tighter uppercase">Watanabe <span className="font-light text-zinc-400 text-sm tracking-widest ml-1 hidden sm:inline">Trailer House</span></span>
+          </div>
+
+          <div className="hidden md:flex items-center gap-10 text-sm font-medium tracking-widest uppercase">
+            <a href="#" className="hover:text-amber-400 transition-colors">Lineup</a>
+            <a href="#" className="hover:text-amber-400 transition-colors">Technology</a>
+            <a href="#" className="hover:text-amber-400 transition-colors">Digital Twin</a>
+          </div>
+
+          <div className="hidden md:flex items-center gap-4">
+            <div className="flex bg-zinc-800 p-1 rounded-full border border-zinc-700">
+              <button 
+                onClick={() => setViewMode('luxury')}
+                className={`px-4 py-1.5 rounded-full text-[10px] transition-all ${viewMode === 'luxury' ? 'bg-amber-600 text-white shadow-lg' : 'text-zinc-400'}`}
+              >
+                PRIVATE
+              </button>
+              <button 
+                onClick={() => setViewMode('public')}
+                className={`px-4 py-1.5 rounded-full text-[10px] transition-all ${viewMode === 'public' ? 'bg-blue-600 text-white shadow-lg' : 'text-zinc-400'}`}
+              >
+                PUBLIC
+              </button>
+            </div>
+          </div>
+
+          <button className="md:hidden" onClick={() => setMobileMenuOpen(true)}>
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className={`absolute top-1/4 -left-20 w-96 h-96 blur-[150px] rounded-full opacity-20 ${viewMode === 'luxury' ? 'bg-amber-500' : 'bg-blue-500'}`} />
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 pt-20 grid md:grid-cols-2 gap-12 items-center">
+          <div className="space-y-8 animate-in fade-in slide-in-from-left-8 duration-700">
+            <div className={`inline-block border-l-2 px-4 py-1 ${current.accentColor} text-xs font-bold tracking-widest uppercase`}>
+              {current.tagline}
+            </div>
+            <h1 className="text-5xl md:text-8xl font-bold leading-tight tracking-tighter">
+              {current.heroTitle}
+            </h1>
+            <p className="text-lg text-zinc-400 max-w-lg leading-relaxed font-light">
+              {current.heroSub}
+            </p>
+            <div className="flex flex-wrap gap-4 pt-4">
+              <button className="px-10 py-5 bg-white text-black font-bold uppercase tracking-widest text-xs flex items-center gap-3 hover:scale-105 transition-transform">
+                {current.cta} <ArrowRight className="w-4 h-4" />
+              </button>
+              <button className="px-10 py-5 border border-zinc-700 font-bold uppercase tracking-widest text-xs hover:bg-zinc-800 transition-all">
+                Project Detail
+              </button>
+            </div>
+          </div>
+
+          {/* AI Generated Visual Showcase */}
+          <div className="relative group animate-in fade-in zoom-in-95 duration-1000 delay-300">
+            <div className="absolute -inset-4 bg-gradient-to-tr from-white/10 to-transparent blur-xl opacity-50" />
+            <div className="relative aspect-[4/3] rounded-sm overflow-hidden bg-zinc-800 border border-zinc-700 shadow-2xl">
+               <GeneratedImage 
+                 prompt={current.imagePrompt} 
+                 className="w-full h-full"
+                 alt={viewMode === 'luxury' ? "Luxury Trailer House Exterior" : "Public Clinic Trailer Exterior"}
+               />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+               <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                 <div className="text-[10px] tracking-widest uppercase font-bold text-white/80 flex items-center gap-2">
+                   <ImageIcon className="w-3 h-3" />
+                   {viewMode === 'luxury' ? 'Premium Villa Concept' : 'Disaster Relief Unit'}
+                 </div>
+                 <Maximize2 className="w-4 h-4 text-white opacity-40" />
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Internal Details Section */}
+      <section className="py-32 bg-zinc-950">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-20 items-center">
+            <div className="space-y-6">
+              <h2 className="text-4xl font-bold tracking-tight">細部まで宿る、<br/>日本のクラフトマンシップ。</h2>
+              <p className="text-zinc-500 leading-relaxed font-light">
+                渡辺製作所のトレーラーハウスは、国内自社工場で一台ずつ熟練の技術者によって製造されます。日本の四季、多湿な気候、そして震災のリスクに耐えうる高い構造強度と、ホテルライクな内装を両立。
+              </p>
+              <div className="grid grid-cols-2 gap-8 pt-8">
+                <div>
+                  <div className="text-3xl font-bold text-white mb-2">0.1mm</div>
+                  <div className="text-[10px] uppercase tracking-widest text-zinc-500">Precision Engineering</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-white mb-2">Highest</div>
+                  <div className="text-[10px] uppercase tracking-widest text-zinc-500">Thermal Insulation</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="aspect-square rounded-sm overflow-hidden border border-zinc-800">
+              <GeneratedImage 
+                prompt="Modern minimalist luxury interior of a high-end trailer house, premium wood finishing, warm lighting, designer furniture, high resolution architectural interior photography."
+                className="w-full h-full"
+                alt="Interior Detail"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Blueprint (Disaster Focus) */}
+      <section className="py-32 bg-black border-y border-zinc-800">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row gap-20 items-center">
+            <div className="md:w-1/2 space-y-6">
+              <span className="text-xs font-bold text-blue-500 tracking-widest uppercase">Self-Sustaining Energy</span>
+              <h2 className="text-4xl font-bold tracking-tight">インフラなき土地を、<br/>拠点へと変える。</h2>
+              <p className="text-zinc-500 leading-relaxed font-light">
+                最新のオフグリッド技術を搭載。太陽光発電と蓄電池、そして水循環システム（WOTA等）の統合により、ライフラインが途絶した状況下でも24時間以上の自律稼働を保証します。
+              </p>
+            </div>
+            <div className="md:w-1/2 w-full">
+              <div className="p-8 border border-zinc-800 bg-zinc-900/30 rounded-sm space-y-8">
+                 <div className="flex justify-between items-end border-b border-zinc-800 pb-4">
+                    <span className="text-sm font-bold">エネルギー自給率</span>
+                    <span className="text-2xl font-mono text-blue-500">100%</span>
+                 </div>
+                 <div className="flex justify-between items-end border-b border-zinc-800 pb-4">
+                    <span className="text-sm font-bold">耐雪荷重</span>
+                    <span className="text-2xl font-mono text-blue-500">2.5m</span>
+                 </div>
+                 <div className="flex justify-between items-end border-b border-zinc-800 pb-4">
+                    <span className="text-sm font-bold">機体寿命</span>
+                    <span className="text-2xl font-mono text-blue-500">30+ Yrs</span>
+                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* AR & Digital Twin (Land Background) */}
+      <section className="py-32 bg-zinc-950">
+        <div className="max-w-7xl mx-auto px-6 text-center space-y-12">
+          <h2 className="text-5xl font-bold tracking-tighter">
+            ARで、その場所に<span className={current.accentColor.split(' ')[1]}>配置</span>する。
+          </h2>
+          <div className="relative max-w-4xl mx-auto group">
+            <div className="aspect-video rounded-lg overflow-hidden border border-zinc-800 shadow-2xl relative">
+              <GeneratedImage 
+                prompt="Empty scenic land in Japanese countryside, mountains in the distance, high-resolution landscape photography, ideal for placing a modern house."
+                className="w-full h-full opacity-60"
+                alt="AR Land Background"
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center space-y-4">
+                  <div className="w-16 h-16 bg-white/10 backdrop-blur-xl border border-white/30 rounded-full flex items-center justify-center mx-auto">
+                    <Smartphone className="w-8 h-8" />
+                  </div>
+                  <p className="text-xs font-bold uppercase tracking-widest">AR Simulation Experience</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="py-40 bg-white text-black">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20">
+          <div className="space-y-8">
+            <h2 className="text-7xl font-bold tracking-tighter leading-none italic uppercase">Contact <br/> Experts.</h2>
+            <p className="text-zinc-600 text-lg font-light">
+              土地の有効活用、節税対策、自治体の防災計画。専門のコンサルタントがあなたのビジョンを形にします。
+            </p>
+          </div>
+          <div className="bg-black text-white p-12 space-y-6">
+            <input type="text" placeholder="Full Name" className="w-full bg-zinc-900 border-none p-5 text-sm outline-none" />
+            <input type="email" placeholder="Email" className="w-full bg-zinc-900 border-none p-5 text-sm outline-none" />
+            <textarea placeholder="Message" rows={4} className="w-full bg-zinc-900 border-none p-5 text-sm outline-none resize-none" />
+            <button className={`w-full py-5 font-bold uppercase tracking-widest text-xs transition-colors ${viewMode === 'luxury' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-blue-600 hover:bg-blue-700'}`}>
+              Send Inquiry
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <footer className="py-20 bg-zinc-950 border-t border-zinc-900">
+        <div className="max-w-7xl mx-auto px-6 text-center space-y-8">
+          <div className="text-2xl font-black italic tracking-tighter">WATANABE</div>
+          <p className="text-[10px] text-zinc-600 tracking-[0.5em] uppercase">© 2026 WATANABE SEISAKUSHO. ALL RIGHTS RESERVED.</p>
+        </div>
+      </footer>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] bg-black p-10 flex flex-col justify-between animate-in fade-in duration-300">
+          <div className="flex justify-between items-center">
+            <span className="text-2xl font-black">WATANABE</span>
+            <button onClick={() => setMobileMenuOpen(false)}><X className="w-8 h-8" /></button>
+          </div>
+          <div className="space-y-8 text-4xl font-bold tracking-tighter">
+            <a href="#" className="block">Lineup</a>
+            <a href="#" className="block">Technology</a>
+            <a href="#" className="block">Digital Twin</a>
+          </div>
+          <div className="flex gap-4">
+             <button onClick={() => {setViewMode('luxury'); setMobileMenuOpen(false)}} className={`flex-1 p-5 border font-bold text-[10px] tracking-widest ${viewMode === 'luxury' ? 'bg-amber-600 border-amber-600' : 'border-zinc-800'}`}>PRIVATE</button>
+             <button onClick={() => {setViewMode('public'); setMobileMenuOpen(false)}} className={`flex-1 p-5 border font-bold text-[10px] tracking-widest ${viewMode === 'public' ? 'bg-blue-600 border-blue-600' : 'border-zinc-800'}`}>PUBLIC</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default App;
