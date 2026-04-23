@@ -11,74 +11,32 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&family=Outfit:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
-        body { font-family: 'Noto Sans JP', sans-serif; background-color: #fdfcfb; color: #433322; }
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #fdfcfb; color: #433322; scroll-behavior: smooth; }
         .outfit { font-family: 'Outfit', sans-serif; }
         .serif { font-family: 'Playfair Display', serif; }
         .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
-        .text-brown { color: #8B5E2E; }
-        .bg-brown { background-color: #8B5E2E; }
-        .border-brown { border-color: #8B5E2E; }
         .shape-blob { background: #f5f0e8; border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; filter: blur(40px); animation: move 20s infinite alternate; }
         @keyframes move { from { transform: translate(0, 0) scale(1); } to { transform: translate(20px, 40px) scale(1.1); } }
+        .bg-rental-gradient { background: linear-gradient(135deg, #fdfcfb 0%, #f5f0e8 100%); }
     </style>
 </head>
 <body>
     <div id="root"></div>
     <script type="text/babel">
-        const { useState, useEffect, useCallback } = React;
+        const { useState, useEffect } = React;
         const Icon = ({ name, className }) => {
             useEffect(() => { if (window.lucide) lucide.createIcons(); }, [name]);
             return <i data-lucide={name} className={className}></i>;
         };
 
-        const apiKey = ""; 
-
-        // ロゴコンポーネント：提供されたファイルをそのまま反映
         const Logo = ({ className }) => (
             <div className={`flex items-center ${className}`}>
-                <img 
-                    src="logo_brown.svg" 
-                    alt="株式会社渡部製作所" 
-                    className="h-16 w-auto object-contain"
-                    onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "https://via.placeholder.com/150x60/8B5E2E/ffffff?text=WATANABE";
-                    }}
-                />
+                <img src="logo_brown.svg" alt="株式会社渡部製作所" className="h-14 w-auto object-contain" />
             </div>
         );
 
-        const GeneratedImage = ({ prompt, className, alt }) => {
-            const [imageUrl, setImageUrl] = useState(null);
-            const [loading, setLoading] = useState(true);
-            const generateImage = useCallback(async () => {
-                if (!apiKey) {
-                    const fallbackMap = {
-                        "luxury": "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=1200",
-                        "public": "https://images.unsplash.com/photo-1582213713364-4bd3dfdcf311?auto=format&fit=crop&q=80&w=1200",
-                        "interior": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800"
-                    };
-                    setImageUrl(prompt.includes("medical") ? fallbackMap.public : prompt.includes("interior") ? fallbackMap.interior : fallbackMap.luxury);
-                    setLoading(false);
-                    return;
-                }
-                setLoading(true);
-                try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ instances: [{ prompt: `${prompt}, architectural photography, bright daylight, harmonious with nature` }], parameters: { sampleCount: 1 } }),
-                    });
-                    const result = await response.json();
-                    setImageUrl(`data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`);
-                } catch (err) { setImageUrl("https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&q=80&w=1200"); } finally { setLoading(false); }
-            }, [prompt]);
-            useEffect(() => { generateImage(); }, [generateImage]);
-            return ( <div className={`${className} bg-stone-50 relative`}> {loading ? <div className="absolute inset-0 flex items-center justify-center animate-pulse text-xs uppercase tracking-widest text-stone-400">Creating Architecture...</div> : <img src={imageUrl} alt={alt} className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105" />} </div> );
-        };
-
         const App = () => {
-            const [viewMode, setViewMode] = useState('luxury');
+            const [viewMode, setViewMode] = useState('luxury'); 
             const [isScrolled, setIsScrolled] = useState(false);
 
             useEffect(() => {
@@ -88,60 +46,79 @@
             }, []);
 
             const content = {
-                luxury: { tag: "PRIVATE & LIFESTYLE", title: "一生に一度を、もっと自由に。", sub: "「家を建てる」という決断を、土地の制約から解き放つ。渡部製作所は、国内自社工場でのミリ単位の設計により、あなたの理想を「可動産」として形にします。", color: "emerald", prompt: "Modern luxury trailer house in Hokkaido forest, wooden deck, large windows, natural warm daylight" },
-                public: { tag: "GOVERNMENT & DISASTER RESPONSE", title: "最強の防災拠点を、瞬時に配置。", sub: "代表 渡部耕平の指揮のもと、有事の際に完全自律するインフラを。オフグリッド技術で地域を守るモバイルクリニック・避難所を、日常から備えるフェーズフリーな形で提案します。", color: "sky", prompt: "Modern disaster response trailer house units, orderly line, professional white exterior, solar panels, bright daylight" }
+                luxury: {
+                    tag: "PRIVATE & LIFESTYLE",
+                    title: "一生に一度を、もっと自由に。",
+                    sub: "土地の制約を越え、自然と調和する「動く邸宅」。渡部製作所は、国内自社工場でのミリ単位の設計により、あなたの理想を「可動産」として形にします。1ヶ月からのレンタル、期間中の買取も可能です。",
+                    img: "img00.jpg", // オフグリッド・ラグジュアリー画像
+                    accent: "emerald"
+                },
+                public: {
+                    tag: "GOVERNMENT & BCP",
+                    title: "最強の防災拠点を、瞬時に配置。",
+                    sub: "有事に完全自律するインフラ。オフグリッド技術で地域を守るモバイルクリニック・避難所を、日常から備えるフェーズフリーな形で提案します。最短1週間のスピード納品に対応。",
+                    img: "img01.jpg", // 防災拠点実例画像
+                    accent: "sky"
+                }
             };
             const current = content[viewMode];
 
             return (
-                <div className="min-h-screen">
-                    {/* Navigation */}
-                    <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'glass py-3 shadow-md' : 'bg-transparent py-6'}`}>
+                <div className="min-h-screen selection:bg-stone-900 selection:text-white">
+                    {/* Nav */}
+                    <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'glass py-3 shadow-sm' : 'bg-transparent py-6'}`}>
                         <div className="max-w-7xl mx-auto px-8 flex justify-between items-center">
-                            <div className="flex items-center">
-                                <Logo />
-                            </div>
-                            <div className="flex items-center gap-8">
-                                <div className="hidden lg:flex gap-10 text-[10px] font-bold tracking-widest uppercase text-stone-400">
-                                    <a href="#usage" className="hover:text-[#8B5E2E] transition-colors">Usage</a>
-                                    <a href="#quality" className="hover:text-[#8B5E2E] transition-colors">Quality</a>
-                                    <a href="#strategy" className="hover:text-[#8B5E2E] transition-colors">Strategy</a>
+                            <Logo />
+                            <div className="flex items-center gap-6">
+                                <div className="hidden lg:flex gap-8 text-[10px] font-bold tracking-widest uppercase text-stone-400">
+                                    <a href="#about" className="hover:text-[#8B5E2E] transition-colors">Concept</a>
+                                    <a href="#lineup" className="hover:text-[#8B5E2E] transition-colors">Lineup</a>
+                                    <a href="#contact" className="hover:text-[#8B5E2E] transition-colors">Contact</a>
                                 </div>
                                 <div className="flex bg-stone-100/50 p-1 rounded-full border border-stone-200">
                                     <button onClick={() => setViewMode('luxury')} className={`px-5 py-2 rounded-full text-[10px] font-bold transition-all ${viewMode === 'luxury' ? 'bg-white text-[#8B5E2E] shadow-sm' : 'text-stone-400'}`}>PRIVATE</button>
                                     <button onClick={() => setViewMode('public')} className={`px-5 py-2 rounded-full text-[10px] font-bold transition-all ${viewMode === 'public' ? 'bg-white text-blue-800 shadow-sm' : 'text-stone-400'}`}>PUBLIC</button>
                                 </div>
-                                <button className="hidden sm:block px-8 py-3 bg-[#8B5E2E] text-white text-[10px] font-black tracking-[0.2em] rounded-full hover:bg-[#6D4924] transition-all shadow-lg shadow-stone-200">
+                                <button className="hidden sm:block px-8 py-3 bg-[#8B5E2E] text-white text-[10px] font-black tracking-[0.2em] rounded-full hover:bg-[#6D4924] transition-all">
                                     INQUIRY
                                 </button>
                             </div>
                         </div>
                     </nav>
 
-                    {/* Hero Section */}
-                    <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-[#fdfcfb]">
+                    {/* Hero */}
+                    <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-rental-gradient">
                         <div className="absolute top-1/4 -right-20 w-[600px] h-[600px] shape-blob opacity-60"></div>
                         <div className="max-w-7xl mx-auto px-8 relative z-10 grid lg:grid-cols-2 gap-16 items-center">
-                            <div className="space-y-10">
+                            <div className="space-y-10 animate-in fade-in slide-in-from-left-10 duration-1000">
                                 <div className="space-y-4">
                                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#8B5E2E]/10 text-[#8B5E2E] rounded-full">
-                                        <Icon name="award" className="w-3 h-3" />
+                                        <Icon name="zap" className="w-3 h-3" />
                                         <span className="text-[10px] font-black tracking-[0.2em] uppercase">{current.tag}</span>
                                     </div>
-                                    <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.95] text-stone-900 serif italic">{current.title}</h2>
+                                    <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.95] text-stone-900 serif italic">
+                                        {current.title}
+                                    </h2>
                                 </div>
-                                <p className="text-xl text-stone-500 max-w-lg leading-relaxed font-light">{current.sub}</p>
-                                <div className="flex flex-wrap items-center gap-6">
+                                <p className="text-xl text-stone-500 max-w-lg leading-relaxed font-light">
+                                    {current.sub}
+                                </p>
+                                <div className="flex flex-wrap items-center gap-6 pt-4">
                                     <button className="px-12 py-5 bg-stone-900 text-white font-bold uppercase tracking-widest text-[11px] rounded-full shadow-2xl hover:scale-105 transition-transform flex items-center gap-3">
                                         プランニングを開始する <Icon name="arrow-right" className="w-4 h-4" />
                                     </button>
-                                    <div className="flex items-center gap-3 text-stone-400 font-bold text-[10px] tracking-widest uppercase">
-                                        <div className="w-12 h-[1px] bg-stone-200"></div>
-                                        Crafted in Hokkaido
+                                    <div className="text-[10px] font-bold text-[#8B5E2E] tracking-widest uppercase flex items-center gap-3">
+                                        <div className="w-10 h-[1px] bg-[#8B5E2E]"></div>
+                                        Short-term to Asset Creation
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-stone-100">
-                                    {[ { l: "工期", v: "最短3ヶ月" }, { l: "税制", v: "固定資産税¥0" }, { l: "拡張", v: "連結・増築OK" }, { l: "償却", v: "最短2年" } ].map((p, i) => (
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 border-t border-stone-200/50">
+                                    {[
+                                        { l: "レンタル", v: "1ヶ月〜5年" },
+                                        { l: "買取", v: "期間中OK" },
+                                        { l: "設計", v: "完全フルカスタム" },
+                                        { l: "納品", v: "最短1週間" }
+                                    ].map((p, i) => (
                                         <div key={i}>
                                             <p className="text-[9px] font-black text-stone-400 tracking-widest uppercase mb-1">{p.l}</p>
                                             <p className="text-sm font-bold text-stone-800">{p.v}</p>
@@ -151,40 +128,95 @@
                             </div>
                             <div className="relative animate-in fade-in zoom-in duration-1000 delay-300">
                                 <div className="relative z-10 aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl border-[16px] border-white group">
-                                    <GeneratedImage prompt={current.prompt} className="w-full h-full" alt="Architecture" />
+                                    <img src={current.img} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Hero Architecture" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                                    <div className="absolute bottom-10 left-10 text-white">
+                                        <p className="text-[10px] font-black tracking-widest uppercase opacity-70 mb-2">Real Project Visualization</p>
+                                        <h4 className="text-3xl font-bold serif italic">{viewMode === 'luxury' ? 'Off-Grid Harmony' : 'Disaster Recovery Support'}</h4>
+                                    </div>
                                 </div>
-                                <div className="absolute -top-6 -right-6 w-32 h-32 bg-[#8B5E2E] text-white rounded-full flex flex-col items-center justify-center border-8 border-white shadow-xl rotate-12">
-                                    <span className="text-[8px] font-black tracking-widest opacity-60">REVALUATION</span>
-                                    <span className="text-xl font-black outfit">2YRS</span>
-                                    <span className="text-[8px] font-bold">早期減価償却</span>
+                                <div className="absolute -bottom-6 -right-6 p-8 glass rounded-3xl shadow-xl border border-white max-w-[260px]">
+                                    <div className="flex items-center gap-4 mb-3 text-[#8B5E2E]">
+                                        <div className="w-10 h-10 bg-[#8B5E2E] rounded-full flex items-center justify-center text-white">
+                                            <Icon name="award" className="w-5 h-5" />
+                                        </div>
+                                        <span className="font-bold text-sm">北海道自社工場生産</span>
+                                    </div>
+                                    <p className="text-[10px] text-stone-500 leading-relaxed italic">
+                                        日本の気候に最適化した高断熱・高耐久構造。既製品からミリ単位のカスタムまで対応。
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    {/* Features / Usage Section */}
-                    <section id="usage" className="py-32 bg-white">
+                    {/* Real World Examples (img02) */}
+                    <section id="about" className="py-32 bg-white">
                         <div className="max-w-7xl mx-auto px-8">
-                            <div className="text-center mb-20 space-y-4">
-                                <h3 className="text-4xl font-bold italic serif tracking-tight">あらゆる用途を、最高水準で。</h3>
-                                <p className="text-stone-400 font-bold text-[10px] tracking-[0.4em] uppercase">Versatile Solution Matrix</p>
+                            <div className="grid lg:grid-cols-2 gap-20 items-center">
+                                <div className="order-2 lg:order-1 relative">
+                                    <div className="aspect-[16/10] rounded-[2rem] overflow-hidden shadow-xl border-8 border-stone-50">
+                                        <img src="img02.jpg" className="w-full h-full object-cover" alt="Actual Deployment" />
+                                    </div>
+                                    <div className="absolute -top-10 -left-10 w-40 h-40 border border-stone-100 rounded-full -z-10"></div>
+                                </div>
+                                <div className="order-1 lg:order-2 space-y-8">
+                                    <h3 className="text-5xl font-black italic serif tracking-tight leading-tight">「日常」と「非日常」を<br/>シームレスに。</h3>
+                                    <p className="text-lg text-stone-500 leading-relaxed font-light">
+                                        復興支援の現場で培われたノウハウ。平時は店舗や住宅として収益を生み、有事には即座に移動して命を守る拠点になる。これが渡部製作所の提唱する「フェーズフリー」なライフサイクル戦略です。
+                                    </p>
+                                    <ul className="space-y-4 pt-4">
+                                        {[
+                                            "1ヶ月から5年の柔軟なレンタルプラン",
+                                            "事業の成長に合わせた「期間中買取」に対応",
+                                            "ボルトオン構造による将来の連結・拡張性"
+                                        ].map((t, i) => (
+                                            <li key={i} className="flex items-center gap-4 text-sm font-bold">
+                                                <div className="w-6 h-6 rounded-full bg-[#8B5E2E] text-white flex items-center justify-center"><Icon name="check" className="w-3 h-3" /></div>
+                                                {t}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
-                            <div className="grid md:grid-cols-3 gap-10">
+                        </div>
+                    </section>
+
+                    {/* Lineup & Layout (img03) */}
+                    <section id="lineup" className="py-32 bg-stone-50">
+                        <div className="max-w-7xl mx-auto px-8">
+                            <div className="text-center mb-24 space-y-4">
+                                <h3 className="text-5xl font-black italic serif tracking-tight">Flexible Lineup</h3>
+                                <p className="text-stone-400 font-bold text-[10px] tracking-[0.4em] uppercase">Watanabe Works Architecture</p>
+                            </div>
+                            
+                            <div className="mb-20 rounded-[3rem] overflow-hidden shadow-2xl border-[16px] border-white bg-white">
+                                <img src="img03.jpg" className="w-full h-auto" alt="Layout Details" />
+                                <div className="p-12 grid md:grid-cols-2 gap-12 border-t border-stone-100">
+                                    <div>
+                                        <h4 className="text-2xl font-bold serif italic mb-4">宿泊棟（Villa Unit）</h4>
+                                        <p className="text-sm text-stone-500 leading-relaxed">4名定員を基本とした、プライバシーと居住性を極めた設計。トイレ、シャワー、ミニキッチン完備。ホテルライクな内装をレンタルで。</p>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-2xl font-bold serif italic mb-4">カフェ・店舗棟（Shop Unit）</h4>
+                                        <p className="text-sm text-stone-500 leading-relaxed">地域の交流拠点やポップアップストアに。テラスと一体化する開放的なデザイン。最短1週間のスピード導入でチャンスを逃しません。</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid md:grid-cols-3 gap-8">
                                 {[
-                                    { t: "Shop / Cafe", l: "店舗・移動販売", p: "Stylish boutique trailer cafe, wood finish" },
-                                    { t: "Office / Work", l: "サテライトオフィス", p: "Modern clean office trailer interior" },
-                                    { t: "Living / Villa", l: "セカンドハウス", p: "Cozy luxury interior of a trailer villa" }
+                                    { t: "Office / Work", l: "サテライトオフィス", d: "集中と解放を両立。庭や空き地が最新のワークスペースに。" },
+                                    { t: "Medical / Base", l: "モバイルクリニック", d: "有事の医療空白をゼロに。オフグリッド・自律運用可能。" },
+                                    { t: "Special / Sauna", l: "趣味・サウナ・離れ", d: "自分だけの「秘密基地」をフルカスタムで。買取もスムーズ。" }
                                 ].map((item, i) => (
-                                    <div key={i} className="group cursor-pointer">
-                                        <div className="aspect-[16/10] rounded-[2rem] overflow-hidden mb-6 relative border border-stone-100">
-                                            <GeneratedImage prompt={item.p} className="w-full h-full group-hover:scale-110 transition-transform duration-700" alt={item.l} />
-                                        </div>
-                                        <div className="flex justify-between items-center px-2">
-                                            <div>
-                                                <p className="text-[10px] font-black text-stone-400 tracking-widest mb-1 uppercase">{item.t}</p>
-                                                <h4 className="text-xl font-bold serif italic">{item.l}</h4>
-                                            </div>
-                                            <Icon name="arrow-up-right" className="w-5 h-5 text-stone-300 group-hover:text-[#8B5E2E] transition-colors" />
+                                    <div key={i} className="p-10 bg-white rounded-[2.5rem] border border-stone-200 hover:shadow-xl transition-all group">
+                                        <div className="text-[10px] font-black text-[#8B5E2E] tracking-widest uppercase mb-2">{item.t}</div>
+                                        <h4 className="text-xl font-bold serif italic mb-4">{item.l}</h4>
+                                        <p className="text-xs text-stone-400 leading-relaxed mb-6">{item.d}</p>
+                                        <div className="pt-4 border-t border-stone-50 flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                                            <span>Plan Detail</span>
+                                            <Icon name="chevron-right" className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                         </div>
                                     </div>
                                 ))}
@@ -192,82 +224,60 @@
                         </div>
                     </section>
 
-                    {/* Quality Section */}
-                    <section id="quality" className="py-32 bg-stone-950 text-white relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-                        <div className="max-w-7xl mx-auto px-8 relative z-10 grid lg:grid-cols-2 gap-24 items-center">
-                            <div className="space-y-12">
-                                <h3 className="text-5xl font-black serif italic tracking-tight">「本物」を選ぶ、<br/>という決断。</h3>
-                                <div className="space-y-8">
-                                    {[
-                                        { i: "factory", t: "国内自社工場の精密施工", d: "海外輸入品では不可能な、日本の気候（多湿・積雪）に完全対応した高断熱・高耐久構造。" },
-                                        { i: "ruler", t: "ミリ単位のフルオーダー設計", d: "簡易ドームや画一的な既製品にはない、建築としての「美しさ」と「自由度」。理想に1mmまでこだわります。" },
-                                        { i: "shield", t: "法的・税務的な完全サポート", d: "車両扱いの設置基準クリアから、最短2年の減価償却、融資相談まで専門チームが伴走。" }
-                                    ].map((f, i) => (
-                                        <div key={i} className="flex gap-6 group">
-                                            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                                                <Icon name={f.i} className="w-6 h-6" />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <h5 className="text-xl font-bold">{f.t}</h5>
-                                                <p className="text-stone-400 text-sm leading-relaxed">{f.d}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="relative aspect-square">
-                                <div className="absolute inset-0 bg-gradient-to-tr from-stone-800 to-transparent rounded-full animate-pulse"></div>
-                                <div className="relative z-10 w-full h-full p-12 flex flex-col justify-center gap-12 text-center">
-                                    <div className="p-8 border border-white/10 glass rounded-3xl">
-                                        <span className="text-xs font-black tracking-widest opacity-50 block mb-4 uppercase">Asset Liquidity</span>
-                                        <h4 className="text-4xl font-bold serif italic mb-4">リセール保証</h4>
-                                        <p className="text-xs text-stone-300">3〜5年後の最低買取価格を保証。アセットとしての流動性を確約します。</p>
-                                    </div>
-                                    <div className="p-8 border border-white/10 glass rounded-3xl">
-                                        <span className="text-xs font-black tracking-widest opacity-50 block mb-4 uppercase">Sustainability</span>
-                                        <h4 className="text-4xl font-bold serif italic mb-4">オフグリッド</h4>
-                                        <p className="text-xs text-stone-300">太陽光、蓄電池、水循環。インフラのない絶景地を、あなたの拠点に。</p>
-                                    </div>
-                                </div>
+                    {/* Contact CTA */}
+                    <section id="contact" className="py-40 bg-stone-900 text-white text-center relative overflow-hidden">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] shape-blob opacity-10"></div>
+                        <div className="max-w-4xl mx-auto px-8 relative z-10 space-y-12">
+                            <h3 className="text-7xl md:text-9xl font-black italic serif tracking-tighter leading-none">
+                                Start Small, <br/><span className="text-[#8B5E2E]">Own the Future.</span>
+                            </h3>
+                            <p className="text-xl text-stone-400 font-light max-w-2xl mx-auto leading-relaxed">
+                                1ヶ月のレンタルから始まる、新しい資産形成。<br/>
+                                代表 渡部耕平と熟練の職人たちが、あなたの「空間の自由」を形にします。
+                            </p>
+                            <div className="flex flex-col sm:flex-row justify-center gap-6 pt-10">
+                                <button className="px-12 py-6 bg-white text-black font-bold uppercase tracking-widest text-[11px] rounded-full hover:scale-105 transition-all">
+                                    買取・プランニング相談
+                                </button>
+                                <button className="px-12 py-6 border border-stone-700 text-white font-bold uppercase tracking-widest text-[11px] rounded-full hover:bg-stone-800 transition-all flex items-center justify-center gap-3">
+                                    <Icon name="phone" className="w-4 h-4" /> 0120-86-7550
+                                </button>
                             </div>
                         </div>
                     </section>
 
+                    {/* Footer */}
                     <footer className="py-24 bg-stone-50 border-t border-stone-200">
                         <div className="max-w-7xl mx-auto px-8">
-                            <div className="grid md:grid-cols-2 gap-16 items-start mb-16">
-                                <div className="space-y-12">
-                                    <Logo className="origin-left scale-110" />
-                                    <div className="space-y-4">
-                                        <p className="text-lg font-black text-stone-800 outfit uppercase tracking-tighter leading-none italic">株式会社 渡部製作所</p>
-                                        <div className="space-y-1 text-xs text-stone-400 font-medium leading-relaxed">
-                                            <p className="font-bold text-stone-600">代表取締役：渡部 耕平</p>
-                                            <p>〒004-0842 札幌市清田区清田2条2丁目3番1号</p>
-                                            <p>TEL：0120-86-7550 / 011-881-3512</p>
-                                            <p>URL：house-ws.com</p>
-                                        </div>
+                            <div className="grid md:grid-cols-2 gap-16 mb-16 items-start">
+                                <div className="space-y-10">
+                                    <Logo className="origin-left scale-125" />
+                                    <div className="space-y-1 text-xs text-stone-400 font-medium tracking-tighter leading-relaxed">
+                                        <p className="text-stone-900 font-black italic text-lg leading-none mb-4 uppercase outfit">株式会社 渡部製作所</p>
+                                        <p className="font-bold text-stone-600">代表取締役：渡部 耕平</p>
+                                        <p>〒004-0842 札幌市清田区清田2条2丁目3番1号</p>
+                                        <p>TEL：0120-86-7550 / 011-881-3512</p>
+                                        <p>URL：house-ws.com</p>
                                     </div>
                                 </div>
                                 <div className="flex flex-col md:items-end gap-10">
                                     <div className="flex gap-12 text-[10px] font-black tracking-widest uppercase text-stone-400">
                                         <div className="space-y-3">
                                             <p className="text-[#8B5E2E]">Service</p>
-                                            <a href="#" className="block hover:text-black">Luxury Villa</a>
-                                            <a href="#" className="block hover:text-black">Public Clinic</a>
-                                            <a href="#" className="block hover:text-black">BaaS Model</a>
+                                            <a href="#" className="block hover:text-black transition-colors">1M-5Y Rental</a>
+                                            <a href="#" className="block hover:text-black transition-colors">Buyout Option</a>
+                                            <a href="#" className="block hover:text-black transition-colors">Custom Build</a>
                                         </div>
                                         <div className="space-y-3">
-                                            <p className="text-[#8B5E2E]">Legal</p>
-                                            <a href="#" className="block hover:text-black">Law & Tax</a>
-                                            <a href="#" className="block hover:text-black">Privacy</a>
-                                            <a href="#" className="block hover:text-black">Sitemap</a>
+                                            <p className="text-[#8B5E2E]">Policy</p>
+                                            <a href="#" className="block hover:text-black transition-colors">BaaS Strategy</a>
+                                            <a href="#" className="block hover:text-black transition-colors">Tax & Benefits</a>
+                                            <a href="#" className="block hover:text-black transition-colors">Privacy</a>
                                         </div>
                                     </div>
-                                    <div className="text-right space-y-2">
-                                        <p className="text-[9px] font-black text-stone-300 tracking-[0.4em] uppercase">Moving Real Estate Innovation</p>
-                                        <p className="text-[10px] font-mono font-bold text-stone-300 uppercase">© 2026 WATANABE WORKS. HOKKAIDO JAPAN.</p>
-                                    </div>
+                                    <p className="text-[10px] font-mono font-bold text-stone-300 uppercase tracking-widest italic pt-8 border-t border-stone-200 w-full md:w-auto text-right">
+                                        © 2026 WATANABE WORKS. HOKKAIDO JAPAN.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -275,6 +285,7 @@
                 </div>
             );
         };
+
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
