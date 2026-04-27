@@ -3,198 +3,378 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>トレーラーハウス メーカーナビ｜北海道キャンプ場開業・投資サポート</title>
+    <title>株式会社渡部製作所 | 資産価値を最大化する次世代トレーラーハウス</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* 前回のCSSを継承し、パークホームズ用のスタイルを追加 */
-        :root {
-            --primary: #1e3a8a;
-            --primary-light: #3b82f6;
-            --accent: #e11d48;
-            --hokkaido-green: #166534;
-            --bg-slate: #f8fafc;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --radius-lg: 16px;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700;900&family=Outfit:wght@700;800;900&display=swap');
+        
+        body { 
+            font-family: 'Noto Sans JP', sans-serif; 
+            background-color: #fdfcfb; 
+            color: #433322; 
+            scroll-behavior: smooth; 
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg-slate); color: var(--text-main); line-height: 1.6; }
-        header { background: white; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; }
-        .header-inner { max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 700; font-size: 1.25rem; color: var(--primary); text-decoration: none; }
-        .hero { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: white; padding: 4rem 1.5rem; text-align: center; }
-        .tabs-wrapper { background: white; border-bottom: 1px solid #e2e8f0; position: sticky; top: 60px; z-index: 90; }
-        .tabs { max-width: 1200px; margin: 0 auto; display: flex; }
-        .tab-btn { flex: 1; padding: 1.25rem; border: none; background: none; cursor: pointer; font-weight: 700; color: var(--text-muted); border-bottom: 3px solid transparent; }
-        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-        .container { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem; }
-        .section { display: none; }
-        .section.active { display: block; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem; }
-        .card { background: white; border-radius: var(--radius-lg); padding: 2rem; border: 1px solid #e2e8f0; transition: 0.3s; position: relative; }
-        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
-        .featured-tag { position: absolute; top: -10px; right: 20px; background: var(--hokkaido-green); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
-        .badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .badge-blue { background: #dbeafe; color: #1e40af; }
-        .btn-reserve { display: block; width: 100%; text-align: center; background: var(--primary); color: white; padding: 0.8rem; border-radius: 8px; text-decoration: none; font-weight: 700; margin-top: 1.5rem; }
-        .table-scroll { overflow-x: auto; background: white; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; }
-        table { width: 100%; border-collapse: collapse; min-width: 900px; }
-        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.85rem; }
-        footer { background: #0f172a; color: white; padding: 4rem 1.5rem; text-align: center; }
+        
+        .serif { font-family: 'Noto Serif JP', serif; }
+        .outfit { font-family: 'Outfit', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); }
+        
+        .gold-shine {
+            background: linear-gradient(90deg, #8B5E2E, #D4AF37, #8B5E2E);
+            background-size: 200% auto;
+            animation: gold-shine-move 4s linear infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        @keyframes gold-shine-move {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .shape-blob { 
+            background: #f5f0e8; 
+            border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; 
+            filter: blur(40px); 
+            animation: move-blob 15s infinite alternate; 
+        }
+        
+        @keyframes move-blob { 
+            from { transform: translate(0, 0) scale(1); } 
+            to { transform: translate(15px, 25px) scale(1.05); } 
+        }
+
+        .price-number {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+
+        .text-balanced {
+            text-wrap: balance;
+        }
+
+        /* スクロールバー装飾 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #8B5E2E; border-radius: 10px; }
     </style>
 </head>
 <body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const Icon = ({ name, className }) => {
+            useEffect(() => { if (window.lucide) lucide.createIcons(); }, [name]);
+            return <i data-lucide={name} className={className}></i>;
+        };
 
-<header>
-    <div class="header-inner">
-        <a href="#" class="logo">🏔️ TRAILER NAVI</a>
-        <nav><a href="https://trailer-house-hokkaido.com/for-investment/reservation" style="text-decoration:none; color:var(--primary); font-weight:700;">開業相談はこちら</a></nav>
-    </div>
-</header>
-
-<section class="hero">
-    <h1>北海道キャンプ場開業・投資ガイド</h1>
-    <p>パークホームズ、THD、ルクラ等、主要メーカーの最新情報。寒冷地仕様の比較から展示場予約まで。</p>
-</section>
-
-<div class="tabs-wrapper">
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('makers')">主要メーカー</button>
-        <button class="tab-btn" onclick="switchTab('showrooms')">全国展示会場</button>
-        <button class="tab-btn" onclick="switchTab('compare')">スペック比較</button>
-    </div>
-</div>
-
-<main class="container">
-    <section id="makers" class="section active">
-        <div class="grid" id="makers-grid"></div>
-    </section>
-
-    <section id="showrooms" class="section">
-        <div class="grid" id="showroom-grid"></div>
-    </section>
-
-    <section id="compare" class="section">
-        <div class="table-scroll">
-            <table>
-                <thead>
-                    <tr>
-                        <th>メーカー</th>
-                        <th>得意分野</th>
-                        <th>寒冷地仕様</th>
-                        <th>車検/法規制</th>
-                        <th>特徴的な機能</th>
-                    </tr>
-                </thead>
-                <tbody id="compare-tbody"></tbody>
-            </table>
-        </div>
-    </section>
-</main>
-
-<footer>
-    <p>&copy; 2026 トレーラーハウス メーカーナビ｜北海道キャンプ場開業サポート</p>
-</footer>
-
-<script>
-    const makers = [
-        {
-            name: "株式会社パークホームズ",
-            short: "パークホームズ",
-            tags: ["グランピング", "宿泊", "フルオーダー"],
-            desc: "仙台本社の寒冷地基準メーカー。アメリカンデザインと高断熱性能を両立。スライドアウト機構で広々とした宿泊空間を実現。",
-            featured: true,
-            coldSpec: "✅ 全機種標準（高断熱）",
-            legal: "車両扱い（建築確認不要）",
-            feature: "SNS映えするデザイン / スライドアウト",
-            url: "https://www.parkhomes.jp/"
-        },
-        {
-            name: "トレーラーハウスデベロップメント (THD)",
-            short: "THD",
-            tags: ["宿泊", "店舗", "オフィス"],
-            desc: "国内シェアNO.1。車検付車両にこだわり、北海道内のキャンプ場設置実績も豊富。自治体協議にも強い。",
-            featured: true,
-            coldSpec: "✅ 対応可",
-            legal: "全車車検取得",
-            feature: "高いコンプライアンス / 全国網",
-            url: "https://www.trailer-house.co.jp/"
-        },
-        {
-            name: "ルクラ株式会社 (Lukura)",
-            short: "ルクラ",
-            tags: ["店舗", "美容院", "宿泊"],
-            desc: "愛知県拠点。デザイン性の高い店舗型に強み。女性ターゲットの施設に最適な空間作りが得意。",
-            featured: false,
-            coldSpec: "⚠️ オプション対応",
-            legal: "車検対応可",
-            feature: "店舗内装のクオリティ",
-            url: "https://www.lukura.jp/"
-        }
-    ];
-
-    const showrooms = [
-        { name: "パークホームズ 仙台本店", maker: "パークホームズ", addr: "宮城県仙台市", url: "https://www.parkhomes.jp/" },
-        { name: "パークホームズ 青森店 (実例あり)", maker: "パークホームズ", addr: "青森県むつ市", url: "https://www.parkhomes.jp/" },
-        { name: "北海道 苫小牧展示場", maker: "THD", addr: "北海道苫小牧市", url: "https://trailer-house-hokkaido.com/for-investment/reservation" },
-        { name: "パークホームズ 茨城・千葉・東京", maker: "パークホームズ", addr: "関東各拠点", url: "https://www.parkhomes.jp/" },
-        { name: "ルクラ 豊橋ショールーム", maker: "ルクラ", addr: "愛知県豊橋市", url: "https://www.lukura.jp/reservation/" }
-    ];
-
-    function renderMakers() {
-        const grid = document.getElementById('makers-grid');
-        grid.innerHTML = makers.map(m => `
-            <div class="card">
-                ${m.featured ? '<div class="featured-tag">北海道推奨</div>' : ''}
-                <span class="badge badge-blue">${m.tags.join(' / ')}</span>
-                <h3>${m.name}</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 1rem;">${m.desc}</p>
-                <ul style="font-size: 0.8rem; color: #64748b; margin-bottom: 1.5rem; list-style:none;">
-                    <li>❄️ 寒冷地: ${m.coldSpec}</li>
-                    <li>💰 税制: 4年定率法適用可</li>
-                </ul>
-                <a href="${m.url}" target="_blank" style="color:var(--primary); font-weight:700;">公式サイト ↗</a>
+        const Logo = ({ className }) => (
+            <div className={`flex items-center ${className}`}>
+                <img src="logo_brown.svg" alt="株式会社渡部製作所" className="h-9 md:h-14 w-auto object-contain" />
             </div>
-        `).join('');
-    }
+        );
 
-    function renderShowrooms() {
-        const grid = document.getElementById('showroom-grid');
-        grid.innerHTML = showrooms.map(s => `
-            <div class="card">
-                <span class="badge" style="background:#f1f5f9;">展示会場</span>
-                <h3 style="font-size: 1.1rem;">${s.name}</h3>
-                <p style="font-size: 0.85rem; color: #64748b;">運営: ${s.maker}</p>
-                <p style="font-size: 0.85rem; margin-top: 0.5rem;">📍 ${s.addr}</p>
-                <a href="${s.url}" target="_blank" class="btn-reserve">見学・現地調査を予約</a>
-            </div>
-        `).join('');
-    }
+        const App = () => {
+            const [viewMode, setViewMode] = useState('investment'); 
+            const [isScrolled, setIsScrolled] = useState(false);
 
-    function renderCompare() {
-        const tbody = document.getElementById('compare-tbody');
-        tbody.innerHTML = makers.map(m => `
-            <tr>
-                <td><strong>${m.short}</strong></td>
-                <td>${m.tags[0]}</td>
-                <td>${m.coldSpec}</td>
-                <td>${m.legal}</td>
-                <td>${m.feature}</td>
-            </tr>
-        `).join('');
-    }
+            useEffect(() => {
+                const handleScroll = () => setIsScrolled(window.scrollY > 40);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
 
-    function switchTab(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        event.currentTarget.classList.add('active');
-    }
+            const content = {
+                investment: {
+                    tag: "個人のお客様・資産運用",
+                    titleLines: ["一生に一度を、", "もっと自由に。"],
+                    sub: "木のぬくもりを活かした「可動産」戦略。短期レンタルから完全カスタム設計、期間中の途中買取まで。富裕層向けの柔軟な投資プランをご提案します。",
+                    img: "img04.jpg",
+                },
+                infrastructure: {
+                    tag: "自治体様・防災インフラ",
+                    titleLines: ["最強の防災拠点を、", "瞬時に配置。"],
+                    sub: "有事に完全自律するインフラを、平時は地域の賑わい拠点に。オフグリッド技術で命を守るモバイルクリニックを、自治体との連携実績と共に提案します。",
+                    img: "img01.jpg",
+                }
+            };
+            const current = content[viewMode];
 
-    renderMakers();
-    renderShowrooms();
-    renderCompare();
-</script>
+            return (
+                <div className="min-h-screen selection:bg-stone-900 selection:text-white">
+                    
+                    {/* キャンペーンバナー */}
+                    <div className="w-full bg-[#8B5E2E] text-white py-2 px-4 text-center sticky top-0 z-[60] shadow-md">
+                        <p className="text-[9px] md:text-xs font-bold tracking-widest flex items-center justify-center gap-2">
+                            <span className="bg-white text-[#8B5E2E] px-1.5 py-0.5 rounded-sm text-[8px] font-black uppercase">特別価格</span>
+                            <span>2026年7月限定 先着10名様 1ヶ月10万円お試しプラン実施中</span>
+                            <Icon name="chevron-right" className="w-3 h-3" />
+                        </p>
+                    </div>
 
+                    {/* ナビゲーション */}
+                    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'glass py-2 shadow-sm' : 'bg-transparent py-4 md:py-6'} top-0 mt-8 md:mt-10`}>
+                        <div className="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center text-stone-500 font-bold">
+                            <Logo />
+                            <div className="flex items-center gap-2 md:gap-6">
+                                <div className="flex bg-stone-200/50 p-0.5 rounded-full border border-stone-200">
+                                    <button onClick={() => setViewMode('investment')} className={`px-3 md:px-5 py-1.5 rounded-full text-[9px] md:text-[10px] transition-all ${viewMode === 'investment' ? 'bg-[#8B5E2E] text-white shadow-sm' : ''}`}>個人のお客様</button>
+                                    <button onClick={() => setViewMode('infrastructure')} className={`px-3 md:px-5 py-1.5 rounded-full text-[9px] md:text-[10px] transition-all ${viewMode === 'infrastructure' ? 'bg-stone-800 text-white shadow-sm' : ''}`}>自治体様</button>
+                                </div>
+                                <button className="hidden md:block px-6 py-2.5 bg-[#8B5E2E] text-white text-[11px] font-bold rounded-full hover:bg-[#6D4924] transition-all">お問い合わせ</button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* ヒーローセクション */}
+                    <section className="relative min-h-[85vh] md:min-h-[90vh] flex items-center pt-24 md:pt-40 pb-16 overflow-hidden bg-[#fdfcfb]">
+                        <div className="absolute top-1/4 -right-10 w-[260px] md:w-[600px] h-[260px] md:h-[600px] shape-blob opacity-40"></div>
+                        <div className="max-w-7xl mx-auto px-5 md:px-8 relative z-10 grid lg:grid-cols-2 gap-10 md:gap-16 items-center text-left">
+                            <div className="space-y-6 md:space-y-10">
+                                <div className="space-y-3 md:space-y-4">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#8B5E2E]/10 text-[#8B5E2E] rounded-full">
+                                        <Icon name="award" className="w-3 h-3" />
+                                        <span className="text-[9px] md:text-[10px] font-black tracking-widest uppercase">{current.tag}</span>
+                                    </div>
+                                    <h2 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.2] text-stone-900 serif italic text-balanced">
+                                        {current.titleLines.map((line, idx) => (<span key={idx} className="block md:inline-block">{line}</span>))}
+                                    </h2>
+                                </div>
+                                <p className="text-sm md:text-lg text-stone-600 max-w-lg leading-relaxed font-light text-balanced">{current.sub}</p>
+                                
+                                <div className="space-y-6">
+                                    <div className="bg-white border border-stone-100 p-5 md:p-6 rounded-2xl max-w-md shadow-sm relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 bg-[#8B5E2E] text-white text-[8px] px-2.5 py-1 rounded-bl-lg font-bold tracking-widest uppercase">Special Offer</div>
+                                        <div className="space-y-2">
+                                            <p className="text-[10px] font-bold text-stone-400 tracking-wider">先着10名様 特別価格（2026年7月）</p>
+                                            <div className="flex items-baseline gap-1">
+                                                <span className="text-xs font-bold text-stone-900">1ヶ月</span>
+                                                <span className="price-number text-3xl md:text-5xl gold-shine ml-1.5">10</span>
+                                                <span className="text-lg font-black text-stone-900 ml-0.5">万円</span>
+                                                <span className="text-[9px] font-bold text-[#8B5E2E] ml-1">(税込)〜</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button className="w-full sm:w-auto px-10 py-4 bg-stone-900 text-white font-bold uppercase tracking-widest text-[11px] rounded-full shadow-lg hover:bg-stone-800 transition-all flex items-center justify-center gap-3">プランを相談する <Icon name="arrow-right" className="w-4 h-4" /></button>
+                                </div>
+                            </div>
+                            <div className="relative order-first lg:order-last">
+                                <div className="relative z-10 aspect-[4/3] md:aspect-[4/5] rounded-2xl md:rounded-[3rem] overflow-hidden shadow-xl border-[6px] md:border-[12px] border-white group">
+                                    <img src={current.img} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="渡部製作所 活用実例" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                                    <div className="absolute bottom-4 md:bottom-8 left-4 md:left-8 text-white text-left">
+                                        <p className="text-[8px] md:text-[10px] font-black tracking-widest uppercase opacity-70 mb-1 font-mono">Real Project Showcase</p>
+                                        <h4 className="text-lg md:text-2xl font-bold serif italic leading-tight">{viewMode === 'investment' ? 'Lifestyle Innovation' : 'Infrastructure'}</h4>
+                                    </div>
+                                </div>
+                                <div className="absolute -top-3 -right-3 md:-top-5 md:-right-5 w-20 md:w-28 h-20 md:h-28 bg-[#8B5E2E] text-white rounded-full flex flex-col items-center justify-center border-4 border-white shadow-xl rotate-12 font-black">
+                                    <span className="text-[7px] md:text-[9px] opacity-70 uppercase tracking-tighter">ROI Max</span>
+                                    <span className="text-sm md:text-xl outfit leading-none my-0.5">2YRS</span>
+                                    <span className="text-[7px] md:text-[9px]">最短2年</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* フラッグシップモデル詳細 (居住型) */}
+                    <section className="py-16 md:py-32 bg-white">
+                        <div className="max-w-7xl mx-auto px-6">
+                            <div className="grid lg:grid-cols-1 gap-10">
+                                <div className="space-y-6 text-left max-w-3xl">
+                                    <div className="inline-flex items-center gap-2 text-[#8B5E2E] border-b-2 border-[#8B5E2E] pb-1 uppercase font-bold">
+                                        <Icon name="home" className="w-4 h-4" />
+                                        <span className="text-[10px] tracking-widest">Flagship Residence Model</span>
+                                    </div>
+                                    <h3 className="text-2xl md:text-4xl font-black serif italic leading-tight">「住まう」を極めた、<br/>フラッグシップモデル。</h3>
+                                    <p className="text-sm md:text-base text-stone-500 leading-relaxed font-light">地上設置型12メートルモデル。リビング、ダイニング、主寝室、充実した水回りを完備した「動く邸宅」。トレーラーハウスの常識を覆す居住性です。</p>
+                                </div>
+                                <div className="rounded-2xl md:rounded-[2.5rem] overflow-hidden shadow-2xl border border-stone-100">
+                                    <img src="img08.jpg" className="w-full h-auto" alt="居住型フラッグシップ詳細" />
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* 【NEW】地上設置型サウナ施設詳細 (img09採用) */}
+                    <section className="py-16 md:py-32 bg-stone-50">
+                        <div className="max-w-7xl mx-auto px-6">
+                            <div className="grid lg:grid-cols-1 gap-10">
+                                <div className="space-y-6 text-left max-w-3xl">
+                                    <div className="inline-flex items-center gap-2 text-[#8B5E2E] border-b-2 border-[#8B5E2E] pb-1 uppercase font-bold">
+                                        <Icon name="zap" className="w-4 h-4" />
+                                        <span className="text-[10px] tracking-widest">Premium Sauna Facility</span>
+                                    </div>
+                                    <h3 className="text-2xl md:text-4xl font-black serif italic leading-tight uppercase">極上の「ととのい」を、<br/>地上設置型サウナ施設。</h3>
+                                    <p className="text-sm md:text-base text-stone-500 leading-relaxed font-light">
+                                        サウナ室、水風呂、外気浴デッキに加え、ゆったりとした休憩室を完備した最高級サウナモデル。商業施設としての収益物件や、私邸のプライベートサウナとして、圧倒的な価値を提供します。
+                                    </p>
+                                </div>
+                                
+                                <div className="rounded-2xl md:rounded-[2.5rem] overflow-hidden shadow-2xl border border-stone-100 bg-white">
+                                    <img src="img09.jpg" className="w-full h-auto object-cover" alt="地上設置型サウナ施設詳細" />
+                                </div>
+
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 font-bold">
+                                    {[
+                                        { l: "延床面積", v: "約29.88㎡ (18畳)" },
+                                        { l: "サウナ仕様", v: "本格サウナ室・水風呂完備" },
+                                        { l: "リラクゼーション", v: "休憩室・外気浴デッキ" },
+                                        { l: "設備", v: "シャワー・トイレ・洗面室" }
+                                    ].map((spec, i) => (
+                                        <div key={i} className="border-l-2 border-watanabe-brown pl-4">
+                                            <p className="text-[9px] font-bold text-stone-400 uppercase tracking-widest mb-1">{spec.l}</p>
+                                            <p className="text-xs md:text-sm text-stone-800 leading-tight">{spec.v}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* 製品ラインナップ概要 */}
+                    <section id="lineup" className="py-16 md:py-32 bg-white">
+                        <div className="max-w-7xl mx-auto px-6">
+                            <div className="text-center mb-12 md:mb-20 space-y-3">
+                                <h3 className="text-2xl md:text-4xl font-black italic serif tracking-tight">製品ラインナップ</h3>
+                                <p className="text-stone-400 font-bold text-[9px] tracking-[0.4em] uppercase font-mono">Product Portfolio</p>
+                            </div>
+                            
+                            <div className="grid md:grid-cols-3 gap-6 md:gap-8 text-left">
+                                {/* サウナモデル */}
+                                <div className="group bg-stone-50 rounded-2xl overflow-hidden shadow-sm flex flex-col h-full hover:shadow-xl transition-all">
+                                    <div className="aspect-[4/3] overflow-hidden">
+                                        <img src="img07.jpg" alt="サウナ専用モデル" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                                    </div>
+                                    <div className="p-6 md:p-8 flex-grow">
+                                        <div className="text-[9px] font-black text-[#8B5E2E] tracking-widest uppercase mb-1 font-mono">Sauna & Bath</div>
+                                        <h4 className="text-lg md:text-xl font-bold serif italic mb-3 text-stone-900">サウナ専用モデル</h4>
+                                        <p className="text-xs text-stone-500 leading-relaxed font-light text-balanced">檜の香りに包まれる本格サウナ。川沿いや森の中など、場所を選ばず極上の「ととのい」空間を実現します。</p>
+                                    </div>
+                                </div>
+
+                                {/* トイレモデル */}
+                                <div className="group bg-stone-50 rounded-2xl overflow-hidden shadow-sm flex flex-col h-full hover:shadow-xl transition-all">
+                                    <div className="aspect-[4/3] overflow-hidden">
+                                        <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover transition-all group-hover:scale-110" alt="高規格トイレ棟" />
+                                    </div>
+                                    <div className="p-6 md:p-8 flex-grow">
+                                        <div className="text-[9px] font-black text-[#8B5E2E] tracking-widest uppercase mb-1 font-mono">Toilet Unit</div>
+                                        <h4 className="text-lg md:text-xl font-bold serif italic mb-3 text-stone-900">高規格トイレ棟</h4>
+                                        <p className="text-xs text-stone-500 leading-relaxed font-light text-balanced">概念を覆す清潔でおしゃれな内装。イベント会場や公園の資産価値を高める、次世代の公共インフラです。</p>
+                                    </div>
+                                </div>
+
+                                {/* 宿泊・別荘モデル */}
+                                <div className="group bg-stone-50 rounded-2xl overflow-hidden shadow-sm flex flex-col h-full hover:shadow-xl transition-all">
+                                    <div className="aspect-[4/3] overflow-hidden">
+                                        <img src="img03.jpg" className="w-full h-full object-cover transition-all group-hover:scale-110" alt="宿泊モデル" />
+                                    </div>
+                                    <div className="p-6 md:p-8 flex-grow">
+                                        <div className="text-[9px] font-black text-[#8B5E2E] tracking-widest uppercase mb-1 font-mono">Villa Unit</div>
+                                        <h4 className="text-lg md:text-xl font-bold serif italic mb-3 text-stone-900">宿泊・別荘モデル</h4>
+                                        <p className="text-xs text-stone-500 leading-relaxed font-light text-balanced">4名定員の快適な個室。キッチン、シャワー完備。資産価値の高い「動く邸宅」を、収益物件や別荘に。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* 実績と信頼 */}
+                    <section id="trust" className="py-16 md:py-32 bg-white">
+                        <div className="max-w-7xl mx-auto px-6">
+                            <div className="grid lg:grid-cols-2 gap-12 md:gap-20 items-center">
+                                <div className="order-last lg:order-first relative">
+                                    <div className="aspect-[16/10] rounded-2xl overflow-hidden shadow-lg border-4 border-stone-50">
+                                        <img src="img02.jpg" className="w-full h-full object-cover" alt="導入実績写真" />
+                                    </div>
+                                </div>
+                                <div className="space-y-6 md:space-y-8 text-left">
+                                    <h3 className="text-2xl md:text-4xl font-black italic serif tracking-tight leading-tight uppercase">社会に必要とされる<br/>強固な信頼。</h3>
+                                    <p className="text-sm md:text-base text-stone-500 leading-relaxed font-light text-balanced">被災地の復興支援現場でも高く評価される品質。平時は収益を生む資産、有事には住民を守るインフラとなる「フェーズフリー」な価値が信頼の証です。</p>
+                                    <div className="grid grid-cols-2 gap-4 font-bold">
+                                        <div className="p-4 bg-stone-50 rounded-xl">
+                                            <div className="text-xl md:text-2xl font-black outfit text-[#8B5E2E]">100%</div>
+                                            <p className="text-[8px] md:text-[9px] font-bold text-stone-400 uppercase tracking-widest mt-1">自社国内工場生産</p>
+                                        </div>
+                                        <div className="p-4 bg-stone-50 rounded-xl">
+                                            <div className="text-xl md:text-2xl font-black outfit text-[#8B5E2E]">Shortest</div>
+                                            <p className="text-[8px] md:text-[9px] font-bold text-stone-400 uppercase tracking-widest mt-1">迅速な搬送・設置</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* お問い合わせ */}
+                    <section id="contact" className="py-24 md:py-40 bg-stone-900 text-white text-center relative overflow-hidden">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[800px] h-[300px] md:h-[800px] shape-blob opacity-10"></div>
+                        <div className="max-w-4xl mx-auto px-6 relative z-10 space-y-10 md:space-y-14">
+                            <h3 className="text-4xl md:text-8xl lg:text-9xl font-black italic serif tracking-tighter leading-tight uppercase">Start Small, <br/><span className="text-[#8B5E2E]">Own Future.</span></h3>
+                            <p className="text-sm md:text-lg text-stone-400 font-light max-w-2xl mx-auto leading-relaxed italic text-balanced px-4">理想の空間を、今すぐあなたの場所に。資料請求・プランニング相談承ります。</p>
+                            <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4 px-4">
+                                <button className="px-8 py-5 bg-white text-black font-bold uppercase tracking-widest text-[10px] rounded-full hover:scale-105 transition-all">個人のお客様 相談窓口</button>
+                                <button className="px-8 py-5 border border-stone-700 text-white font-bold uppercase tracking-widest text-[10px] rounded-full hover:bg-stone-800 transition-all">自治体様 防災計画窓口</button>
+                            </div>
+                            <div className="pt-4 text-center">
+                                <a href="tel:0120-86-7550" className="text-xl md:text-4xl font-black outfit hover:text-[#8B5E2E] transition-colors flex items-center justify-center gap-3">
+                                    <Icon name="phone" className="w-6 h-6 md:w-8 md:h-8" />0120-86-7550
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* フッター */}
+                    <footer className="py-16 md:py-24 bg-stone-50 border-t border-stone-200">
+                        <div className="max-w-7xl mx-auto px-6">
+                            <div className="flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16 mb-12 text-left">
+                                <div className="space-y-6">
+                                    <Logo />
+                                    <div className="space-y-3 font-medium">
+                                        <p className="text-stone-900 font-black italic text-lg uppercase outfit">株式会社 渡部製作所</p>
+                                        <div className="space-y-1 text-[11px] md:text-xs text-stone-500 tracking-tight leading-relaxed">
+                                            <p className="font-bold text-stone-700">代表取締役：渡部 耕平</p>
+                                            <p>〒004-0842 札幌市清田区清田2条2丁目3番1号</p>
+                                            <p>電話番号：0120-86-7550 / 011-881-3512</p>
+                                            <p>公式サイト：<a href="https://house-ws.com/" target="_blank" className="text-[#8B5E2E] font-bold hover:underline">house-ws.com</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-x-12 gap-y-8 w-full md:w-auto font-bold text-stone-400">
+                                    <div className="space-y-3">
+                                        <p className="text-[#8B5E2E] text-[10px] font-black uppercase tracking-widest">MENU</p>
+                                        <div className="space-y-2 text-[11px]">
+                                            <a href="#lineup" className="block hover:text-black">製品ラインナップ</a>
+                                            <a href="#contact" className="block hover:text-black">お問い合わせ</a>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <p className="text-[#8B5E2E] text-[10px] font-black uppercase tracking-widest">LEGAL</p>
+                                        <div className="space-y-2 text-[11px]">
+                                            <a href="#" className="block hover:text-black transition-colors">利用規約</a>
+                                            <a href="#" className="block hover:text-black transition-colors">プライバシー</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="pt-10 border-t border-stone-200 text-center">
+                                <p className="text-[9px] md:text-[10px] font-mono font-bold text-stone-300 uppercase tracking-widest italic font-bold">© 2026 WATANABE WORKS. HOKKAIDO JAPAN.</p>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
